@@ -3,10 +3,11 @@ from __future__ import unicode_literals
 import json
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from ..orders.models import Task, AvailableUserTypes, AvailableTaskStates
+from ..orders.models import Task, TaskState, AvailableUserTypes, AvailableTaskStates
 
 
 class TaskStateUpdateView(APIView):
@@ -36,7 +37,7 @@ class TaskStateUpdateView(APIView):
 
         if user_type == AvailableUserTypes.delivery_person:
             if state in [AvailableTaskStates.accepted, AvailableTaskStates.completed]:
-                task.state = state
+                task.state = AvailableTaskStates.new
                 task.assigned_to = user
                 task.save()
                 return Response(status=status.HTTP_200_OK)

@@ -57,6 +57,7 @@
                     <span class="priority text-muted">${data.priority}</span>
                     <span class="state text-muted">${data.state}</span>
                     <button data-task="${data.task_id}" data-state="accepted" class="btn btn-success btn-sm mr-3 align-items-center state-change">Accept Task</button>
+                    <button data-task=${data.task_id} data-state="declined" class="btn btn-danger btn-sm mr-3 align-items-center state-change">Decline Task</button>
                 </li>`
                             
             );
@@ -66,6 +67,7 @@
         }
         if (data.action == "accepted_links"){
             task.find(`[data-state="accepted"]`).remove();
+            task.find(`[data-state="declined"]`).remove();
             task.append(
                 `<button data-task=${data.task_id} data-state="completed" class="btn btn-success btn-sm mr-3 align-items-center state-change">Mark Complete</button>
                 <button data-task=${data.task_id} data-state="declined" class="btn btn-danger btn-sm mr-3 align-items-center state-change">Decline Task</button>`
@@ -82,20 +84,21 @@
         }
 
         if (data.state == "declined" && data.user_type == "SM"){
-            task.append(`
-                <button data-task="${data.task_id}" data-state="cancelled" class="btn btn-success btn-sm mr-3 align-items-center state-change">Cancel Task</button>`
-            );
+            if (task.find(`[data-state="accepted"]`).length == 0){
+                task.append(`
+                    <button data-task="${data.task_id}" data-state="cancelled" class="btn btn-danger btn-sm mr-3 align-items-center state-change">Cancel Task</button>`
+                );
+            }
         }
-        
 
-        var x = 3000; //timout for alert
+        var x = 5000; //timout for alert
         originalColor = task.css("background");
 
         task.css("background", "red");
         setTimeout(function(){
             task.css("background", originalColor);
         }, x);
-        
+
     };
 
     if (socket.readyState == WebSocket.OPEN) {
