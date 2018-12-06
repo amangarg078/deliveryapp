@@ -1,0 +1,49 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="shortcut icon" href="{% static 'src/images/favicon.ico' %}">
+
+        {% block meta %}
+        <meta property="og:type" content="website" />
+        <meta property="og:static" content="{{ request.build_absolute_uri }}" />
+        <meta property="og:title" content="Delivery" />
+
+        {% endblock meta %}
+
+        <title>{% block title %}Delivery{% endblock title %} | Delivery</title>
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+
+        <title>Signin Template for Bootstrap</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        {% block stylesheets %}
+        {% endblock stylesheets %}
+
+    </head>
+
+    <body {% block body_classes %}{% endblock body_classes %}>
+        
+        {% include "partials/messages.html" %}
+
+        {% block body %}
+        <h1>Hello, world!</h1>
+        {% endblock body %}
+         <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        {% block scripts %}
+        <!--dom-ready script for all pages-->
+        {% endblock scripts %}
+
+    </body>
+
+</html>

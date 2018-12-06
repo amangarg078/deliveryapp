@@ -1,0 +1,34 @@
+{% load utils %}
+<div class="form-group{% if field.errors %} has-error {% endif %} {% if hidden %} d-none {% endif %}{% if border_padding %} border-bottom pb-3{% endif %}">
+
+    {% if not nolabel %}
+        <label class="form-control-label" for="id_{{ field.html_name }}">{{ field.label }}</label>
+    {% endif %}
+
+    {% if autofocus %}
+        {% if placeholder %}
+            {% with "autofocus,class:form-control"|add:",placeholder:"|add:placeholder as class_data %}
+                {{ field|set_element_attributes:class_data }}
+            {% endwith %}
+        {% else %}
+            {{ field|set_element_attributes:"autofocus,class:form-control" }}
+        {% endif %}
+
+    {% else %}
+        {% if placeholder %}
+            {% with "class:form-control"|add:",placeholder:"|add:placeholder as class_data %}
+                {{ field|set_element_attributes:class_data }}
+            {% endwith %}
+        {% else %}
+            {{ field|set_element_attributes:"class:form-control" }}
+        {% endif %}
+    {% endif %}
+
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <span class="help-block d-inline-block font-italic text-danger">{{ error }}</span>
+        {% endfor %}
+    {% elif field.help_text %}
+        <span class="help-block d-inline-block font-italic text-muted">{{ field.help_text }}</span>
+    {% endif %}
+</div>

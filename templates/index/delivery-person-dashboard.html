@@ -1,0 +1,32 @@
+<h3>Delivery Tasks</h3>
+
+<section class="container">
+    <div class="py-5 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <ul class="assigned-orders list-group">
+                        {% for object in object_list %}
+                            <li data-task="{{object.uid}}" class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div>
+                                    <h6 class="my-0">{{ object.title }}</h6>
+                                </div>
+                                <span class="priority text-muted">{{ object.priority }}</span>
+                                <span class="state text-muted">{{ object.state }}</span>
+                                {% if object.state not in "new,cancelled,completed" %}
+                                    <button data-task={{object.uid}} data-state="completed" class="btn btn-success btn-sm mr-3 align-items-center state-change">Mark Complete</button>
+                                    <button data-task={{object.uid}} data-state="declined" class="btn btn-danger btn-sm mr-3 align-items-center state-change">Decline Task</button>
+                                {% endif %}
+                                {% if object.state == "new" %}
+                                    <button data-task={{object.uid}} data-state="accepted" class="btn btn-success btn-sm mr-3 align-items-center state-change">Accept</button>
+                                {% endif %}
+                                
+                            </li> 
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,120 @@
+{% extends "index/base.html" %}
+{% load static %}
+{% load utils %}
+
+
+{% block body_classes %}class="text-center bg-light"{% endblock body_classes %}
+
+{% block body %}
+
+
+    <div class="container">
+        <div class="py-5 text-center">
+            <ul>
+                {% for user in users %}
+                    <!-- NOTE: We escape HTML to prevent XSS attacks. -->
+                    <li data-username="{{ user.username|escape }}">
+                        {{ user.username|escape }}: {{ user.status|default:'Offline' }}
+                    </li>
+                {% endfor %}
+            </ul>
+           {% if request.user.is_store_manager %}
+               {% include "index/store-owner-dashboard.html" with object_list=object_list %}
+           {% else %}
+               {% include "index/delivery-person-dashboard.html" with object_list=object_list %}
+           {% endif %}
+        </div>
+    </div>
+
+{% endblock body %}
+
+
+{% block scripts %}
+  <script>
+    var socket = new WebSocket('ws://' + window.location.host + '/users/');
+
+    socket.onopen = function open() {
+        console.log('WebSockets connection created.');
+    };
+
+    socket.onmessage = function message(event) {
+        var data = JSON.parse(event.data);
+        console.log("data", data)
+
+        
+        var task = $('li').filter(function () {
+            return $(this).data('task') == data.task_id;
+        });
+        if (task.length>0){
+            task.find(".state").html(data.state);
+            task.find(".assigned_to").html(data.assigned_to);
+        } else {
+            $(".assigned-orders").prepend(
+                `<li data-task="${data.task_id}" class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">${data.title}</h6>
+                    </div>
+                    <span class="priority text-muted">${data.priority}</span>
+                    <span class="state text-muted">${data.state}</span>
+                    <button data-task="${data.task_id}" data-state="accepted" class="btn btn-success btn-sm mr-3 align-items-center state-change">Accept Task</button>
+                </li>`
+                            
+            );
+        }
+        if (data.action == "remove"){
+            task.remove();
+        }
+        if (data.action == "accepted_links"){
+            task.find(`[data-state="accepted"]`).remove();
+            task.append(
+                `<button data-task=${data.task_id} data-state="completed" class="btn btn-success btn-sm mr-3 align-items-center state-change">Mark Complete</button>
+                <button data-task=${data.task_id} data-state="declined" class="btn btn-danger btn-sm mr-3 align-items-center state-change">Decline Task</button>`
+            )
+        }
+
+        if (data.state == "completed"){
+            task.find(`[data-state="completed"]`).remove();
+            task.find(`[data-state="declined"]`).remove();
+            task.find(`[data-state="cancelled"]`).remove();
+        }
+        if (data.state == "accepted" || data.state == "cancelled"){
+            task.find(`[data-state="cancelled"]`).remove();
+        }
+
+        if (data.state == "declined" && data.user_type == "SM"){
+            task.append(`
+                <button data-task="${data.task_id}" data-state="cancelled" class="btn btn-success btn-sm mr-3 align-items-center state-change">Cancel Task</button>`
+            );
+        }
+        
+
+        var x = 3000; //timout for alert
+        originalColor = task.css("background");
+
+        task.css("background", "red");
+        setTimeout(function(){
+            task.css("background", originalColor);
+        }, x);
+        
+    };
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.onopen();
+    }
+  </script>
+  <script type="text/javascript">
+    $(document).on('click','.state-change', function(){
+        var data = $(this).data();
+        var task = $('li').filter(function () {
+            return $(this).data('task') == data.task;
+        });
+        data.csrfmiddlewaretoken = '{{ csrf_token }}';
+        $.post("{% url 'apiv1:api-update-task' %}", data).done(function(response) {
+            console.log("task updated");
+            if (data.state == "declined"){
+                task.remove();
+            }
+        });
+    });
+  </script>
+{% endblock scripts %}

@@ -1,0 +1,40 @@
+<h3>Store Manager Tasks</h3>
+<section class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 align-self-center d-flex justify-content-end">
+            <a href="{% url 'orders:task-create-view' %}" class="btn btn-primary mr-3 align-items-center"> Create Task </a>
+        </div>
+    </div>
+</section>
+
+
+<section class="container">
+    <div class="py-5 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <ul id="task-list" class="list-group">
+                        
+                        {% for object in object_list %}
+                            <li data-task="{{object.uid}}" class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div>
+                                    <h6 class="my-0"><a href="{% url 'orders:task-detail-view' object.uid %}">{{ object.title }}</a></h6>
+                                </div>
+                                <span class="priority text-muted">{{ object.priority }}</span>
+                                <span class="state text-muted">{{ object.state }}</span>
+                                <span class="assigned_to text-muted">{{ object.assigned_to|default_if_none:"-" }}</span>
+                                {% if object.state not in "cancelled, accepted, completed" %}
+                                    <button data-task={{object.uid}} data-state="cancelled" class="btn btn-danger btn-sm mr-3 align-items-center state-change">Cancel Task</button>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</section>
+

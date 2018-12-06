@@ -1,0 +1,35 @@
+{% extends "index/base.html" %}
+{% load static %}
+{% load utils %}
+
+
+{% block body_classes %}class="bg-light"{% endblock body_classes %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <div>
+                            <p><strong>Title: </strong>{{ object.title }}</p>
+                            <p><strong>Created on: </strong>{{ object.created_on }}</p>
+                            <p><strong>Last State: </strong>{{ object.state }}</p>
+                        </div>
+
+                        <br>
+                        <div>
+                            <h6> State trasitions </h6>
+                            {% for state in object.get_state_transitions %}
+                                <p>{{state.created_on}} <strong>State: {{state.state}} </strong> Assigned to: {{state.delivery_person|default_if_none:"-"}}</p>
+                            {% endfor %}
+                        </div>
+                        <a href="{% url 'orders:dashboard' %}" class="btn btn-danger mt-3 col-sm-12 col-md-3"> Back </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

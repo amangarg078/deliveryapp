@@ -1,0 +1,23 @@
+{% extends "index/base.html" %}
+{% load static %}
+{% load utils %}
+
+
+{% block body_classes %}class="text-center bg-light"{% endblock body_classes %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="py-5 text-center">
+            <form method="POST" action="">
+                <div class="form-group">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <a href="{% url 'orders:dashboard' %}" class="btn btn-danger mt-3 col-sm-12 col-md-3"> Back </a>
+                    <input type="submit" class="btn btn-primary mt-3 col-sm-12 col-md-3" id="task-create">
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock body %}
