@@ -12,7 +12,7 @@ chardet==3.0.4
 constantly==15.1.0
 daphne==1.4.2
 decorator==4.3.0
-Django==1.11.16
+Django==1.11.23
 django-channels==0.7.0
 django-rest-framework==0.1.0
 djangorestframework==3.9.0
