@@ -15,7 +15,7 @@ decorator==4.3.0
 Django==1.11.29
 django-channels==0.7.0
 django-rest-framework==0.1.0
-djangorestframework==3.9.0
+djangorestframework==3.9.1
 enum34==1.1.6
 hyperlink==18.0.0
 idna==2.7
