@@ -3,7 +3,7 @@ asgi-redis==1.4.3
 asgiref==1.1.2
 async-timeout==2.0.1
 attrs==18.2.0
-autobahn==18.11.2
+autobahn==20.12.3
 Automat==0.7.0
 backports.shutil-get-terminal-size==1.0.0
 certifi==2018.10.15
