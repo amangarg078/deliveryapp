@@ -6,7 +6,7 @@ attrs==18.2.0
 autobahn==18.11.2
 Automat==0.7.0
 backports.shutil-get-terminal-size==1.0.0
-certifi==2018.10.15
+certifi==2022.12.7
 channels==1.1.5
 chardet==3.0.4
 constantly==15.1.0
